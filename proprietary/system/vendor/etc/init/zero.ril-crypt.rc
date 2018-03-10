@@ -1,0 +1,18 @@
+#
+# Copyright (C) 2018 TeamNexus
+#
+# RIL-support for encrypted devices with late-decrypting
+#
+on property:vold.decrypt=trigger_post_fs_data
+	# properly shutdown RIL/modem-daemons
+	stop ril-daemon
+	stop ril-daemon1
+	stop cpboot-daemon
+
+	# wait for average time of shutdown (4s + padd)
+	wait /dev/.hopefully-never-existing-file 5
+
+	# restart daemons
+	start cpboot-daemon
+	start ril-daemon
+	start ril-daemon1
